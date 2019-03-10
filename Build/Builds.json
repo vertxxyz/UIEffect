@@ -1,0 +1,11 @@
+{
+"companyName": "Coffee",
+"productName": "UIEffect",
+"dataUrl": "Builds.data.unityweb",
+"asmCodeUrl": "Builds.asm.code.unityweb",
+"asmMemoryUrl": "Builds.asm.memory.unityweb",
+"asmFrameworkUrl": "Builds.asm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
