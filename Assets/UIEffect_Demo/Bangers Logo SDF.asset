@@ -7,229 +7,102 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Bangers Logo SDF Material
-  m_Shader: {fileID: 4800000, guid: dca26082f9cb439469295791d9f76fe5, type: 3}
+  m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
   m_ShaderKeywords: GLOW_ON
   m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
+  disabledShaderPasses: []
   m_SavedProperties:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TexEnvs:
-    - first:
-        name: _BumpMap
-      second:
+    - _BumpMap:
         m_Texture: {fileID: 2800000, guid: f3133098380a54154a6efe8ad05b5303, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - first:
-        name: _Cube
-      second:
+    - _Cube:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - first:
-        name: _FaceTex
-      second:
+    - _FaceTex:
         m_Texture: {fileID: 2800000, guid: 05b6b2f208a9b485795b37fc99d07e64, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - first:
-        name: _MainTex
-      second:
+    - _MainTex:
         m_Texture: {fileID: 2800000}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - first:
-        name: _MaskTex
-      second:
+    - _MaskTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - first:
-        name: _OutlineTex
-      second:
+    - _OutlineTex:
         m_Texture: {fileID: 2800000, guid: 083315c2119934ed6ba70936e2dc07ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - first:
-        name: _Ambient
-      second: 0.5
-    - first:
-        name: _Bevel
-      second: 0.461
-    - first:
-        name: _BevelClamp
-      second: 0
-    - first:
-        name: _BevelOffset
-      second: -0.09
-    - first:
-        name: _BevelRoundness
-      second: 0.615
-    - first:
-        name: _BevelWidth
-      second: 0.001
-    - first:
-        name: _BumpFace
-      second: 0
-    - first:
-        name: _BumpOutline
-      second: 0
-    - first:
-        name: _ColorMask
-      second: 15
-    - first:
-        name: _Diffuse
-      second: 0.5
-    - first:
-        name: _FaceDilate
-      second: 0.2
-    - first:
-        name: _FaceUVSpeedX
-      second: 0
-    - first:
-        name: _FaceUVSpeedY
-      second: 0
-    - first:
-        name: _GlowInner
-      second: 0.076
-    - first:
-        name: _GlowOffset
-      second: 0.354
-    - first:
-        name: _GlowOuter
-      second: 0.336
-    - first:
-        name: _GlowPower
-      second: 0.75
-    - first:
-        name: _GradientScale
-      second: 11
-    - first:
-        name: _LightAngle
-      second: 3.1416
-    - first:
-        name: _MaskSoftnessX
-      second: 0
-    - first:
-        name: _MaskSoftnessY
-      second: 0
-    - first:
-        name: _OutlineSoftness
-      second: 0
-    - first:
-        name: _OutlineUVSpeedX
-      second: 0
-    - first:
-        name: _OutlineUVSpeedY
-      second: 0
-    - first:
-        name: _OutlineWidth
-      second: 0.4
-    - first:
-        name: _PerspectiveFilter
-      second: 0.875
-    - first:
-        name: _Reflectivity
-      second: 10
-    - first:
-        name: _ScaleRatioA
-      second: 0.90909094
-    - first:
-        name: _ScaleRatioB
-      second: 0.6136364
-    - first:
-        name: _ScaleRatioC
-      second: 0.6136364
-    - first:
-        name: _ScaleX
-      second: 1
-    - first:
-        name: _ScaleY
-      second: 1
-    - first:
-        name: _ShaderFlags
-      second: 0
-    - first:
-        name: _SpecularPower
-      second: 2
-    - first:
-        name: _Stencil
-      second: 0
-    - first:
-        name: _StencilComp
-      second: 8
-    - first:
-        name: _StencilOp
-      second: 0
-    - first:
-        name: _StencilReadMask
-      second: 255
-    - first:
-        name: _StencilWriteMask
-      second: 255
-    - first:
-        name: _TextureHeight
-      second: 1024
-    - first:
-        name: _TextureWidth
-      second: 1024
-    - first:
-        name: _UnderlayDilate
-      second: 0
-    - first:
-        name: _UnderlayOffsetX
-      second: 0
-    - first:
-        name: _UnderlayOffsetY
-      second: 0
-    - first:
-        name: _UnderlaySoftness
-      second: 0
-    - first:
-        name: _VertexOffsetX
-      second: 0
-    - first:
-        name: _VertexOffsetY
-      second: 0
-    - first:
-        name: _WeightBold
-      second: 0.5
-    - first:
-        name: _WeightNormal
-      second: 0
+    - _Ambient: 0.5
+    - _Bevel: 0.461
+    - _BevelClamp: 0
+    - _BevelOffset: -0.09
+    - _BevelRoundness: 0.615
+    - _BevelWidth: 0.001
+    - _BumpFace: 0
+    - _BumpOutline: 0
+    - _ColorMask: 15
+    - _Diffuse: 0.5
+    - _FaceDilate: 0.2
+    - _FaceUVSpeedX: 0
+    - _FaceUVSpeedY: 0
+    - _GlowInner: 0.076
+    - _GlowOffset: 0.354
+    - _GlowOuter: 0.336
+    - _GlowPower: 0.75
+    - _GradientScale: 11
+    - _LightAngle: 3.1416
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _OutlineSoftness: 0
+    - _OutlineUVSpeedX: 0
+    - _OutlineUVSpeedY: 0
+    - _OutlineWidth: 0.4
+    - _PerspectiveFilter: 0.875
+    - _Reflectivity: 10
+    - _ScaleRatioA: 0.90909094
+    - _ScaleRatioB: 0.6136364
+    - _ScaleRatioC: 0.6136364
+    - _ScaleX: 1
+    - _ScaleY: 1
+    - _ShaderFlags: 0
+    - _SpecularPower: 2
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _TextureHeight: 1024
+    - _TextureWidth: 1024
+    - _UnderlayDilate: 0
+    - _UnderlayOffsetX: 0
+    - _UnderlayOffsetY: 0
+    - _UnderlaySoftness: 0
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    - _WeightBold: 0.5
+    - _WeightNormal: 0
     m_Colors:
-    - first:
-        name: _ClipRect
-      second: {r: -10000, g: -10000, b: 10000, a: 10000}
-    - first:
-        name: _EnvMatrixRotation
-      second: {r: 0, g: 0, b: 0, a: 0}
-    - first:
-        name: _FaceColor
-      second: {r: 1, g: 1, b: 1, a: 1}
-    - first:
-        name: _GlowColor
-      second: {r: 1, g: 0.6344826, b: 0, a: 0.5019608}
-    - first:
-        name: _MaskCoord
-      second: {r: 0, g: 0, b: 100000, a: 100000}
-    - first:
-        name: _OutlineColor
-      second: {r: 1, g: 1, b: 1, a: 1}
-    - first:
-        name: _ReflectFaceColor
-      second: {r: 0, g: 0, b: 0, a: 1}
-    - first:
-        name: _ReflectOutlineColor
-      second: {r: 0, g: 0, b: 0, a: 1}
-    - first:
-        name: _SpecularColor
-      second: {r: 1, g: 1, b: 1, a: 1}
-    - first:
-        name: _UnderlayColor
-      second: {r: 0, g: 0, b: 0, a: 0.5}
+    - _ClipRect: {r: -10000, g: -10000, b: 10000, a: 10000}
+    - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 1, g: 0.6344826, b: 0, a: 0.5019608}
+    - _MaskCoord: {r: 0, g: 0, b: 100000, a: 100000}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!28 &2800000
 Texture2D:
   m_ObjectHideFlags: 1
@@ -239,6 +112,8 @@ Texture2D:
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
   serializedVersion: 2
   m_Width: 1024
   m_Height: 1024
@@ -250,10 +125,13 @@ Texture2D:
   m_ImageCount: 1
   m_TextureDimension: 2
   m_TextureSettings:
+    serializedVersion: 2
     m_FilterMode: 1
     m_Aniso: 1
     m_MipBias: 0
-    m_WrapMode: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
   m_LightmapFormat: 0
   m_ColorSpace: 0
   image data: 1048576
@@ -270,7 +148,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -667331979, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Bangers Logo SDF
   m_EditorClassIdentifier: 
   hashCode: 1607616788
@@ -1225,19 +1103,23 @@ MonoBehaviour:
       yAdvance: 0
     xOffset: 0
   fallbackFontAssets: []
-  fontCreationSettings:
-    fontSourcePath: 
-    fontSizingMode: 0
-    fontSize: 0
-    fontPadding: 0
-    fontPackingMode: 0
-    fontAtlasWidth: 0
-    fontAtlasHeight: 0
-    fontCharacterSet: 0
+  m_CreationSettings:
+    sourceFontFileName: 
+    sourceFontFileGUID: 
+    pointSizeSamplingMode: 0
+    pointSize: 0
+    padding: 0
+    packingMode: 0
+    atlasWidth: 0
+    atlasHeight: 0
+    characterSetSelectionMode: 0
+    characterSequence: 
+    referencedFontAssetGUID: 
+    referencedTextAssetGUID: 
     fontStyle: 0
-    fontStlyeModifier: 0
-    fontRenderMode: 0
-    fontKerning: 0
+    fontStyleModifier: 0
+    renderMode: 0
+    includeFontFeatures: 0
   fontWeights:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
