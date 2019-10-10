@@ -55,7 +55,7 @@ namespace Coffee.UIExtensions
 
                 onModifyMaterial(entry.material);
                 materialMap.Add(hash, entry);
-                Debug.LogFormat($"Register {hash} {entry.material}");
+                //Debug.LogFormat($"Register {hash} {entry.material}");
             }
 
             entry.referenceCount++;
@@ -71,7 +71,7 @@ namespace Coffee.UIExtensions
                 {
                     entry.Release();
                     materialMap.Remove(hash);
-                    Debug.LogFormat($"Unregister {hash}");
+                    //Debug.LogFormat($"Unregister {hash}");
                 }
             }
         }

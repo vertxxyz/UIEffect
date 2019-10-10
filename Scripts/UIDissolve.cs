@@ -301,7 +301,7 @@ namespace Coffee.UIExtensions
 
 		public override void ModifyMaterial(Material material)
 		{
-			Debug.LogFormat(this, $"ModifyMaterial {material}");
+			//Debug.LogFormat(this, $"ModifyMaterial {material}");
 
 			string materialShaderName = material.shader.name;
 			if(materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
