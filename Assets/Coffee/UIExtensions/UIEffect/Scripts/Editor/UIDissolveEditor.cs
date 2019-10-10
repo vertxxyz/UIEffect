@@ -57,37 +57,8 @@ namespace Coffee.UIExtensions.Editors
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-			foreach (var d in targets.Cast<UIDissolve> ())
-			{
-				var mat = d.material;
-				if (d.isTMPro && mat && mat.HasProperty(s_NoiseTexId))
-				{
-					ColorMode colorMode =
-								mat.IsKeywordEnabled ("ADD") ? ColorMode.Add
-										: mat.IsKeywordEnabled ("SUBTRACT") ? ColorMode.Subtract
-										: mat.IsKeywordEnabled ("FILL") ? ColorMode.Fill
-										: ColorMode.Multiply;
-
-					Texture noiseTexture = mat.GetTexture(s_NoiseTexId);
-
-					if (d.colorMode != colorMode || d.noiseTexture != noiseTexture)
-					{
-						var so = new SerializedObject (d);
-						so.FindProperty ("m_ColorMode").intValue = (int)colorMode;
-						so.FindProperty ("m_NoiseTexture").objectReferenceValue = noiseTexture;
-						so.ApplyModifiedProperties ();
-					}
-				}
-			}
 
 			serializedObject.Update();
-
-			//================
-			// Effect material.
-			//================
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.PropertyField(_spMaterial);
-			EditorGUI.EndDisabledGroup();
 
 			//================
 			// Effect setting.
@@ -97,8 +68,7 @@ namespace Coffee.UIExtensions.Editors
 			EditorGUILayout.PropertyField(_spSoftness);
 			EditorGUILayout.PropertyField(_spColor);
 
-			bool isAnyTMPro = targets.Cast<UIDissolve>().Any(x => x.isTMPro);
-			using (new EditorGUI.DisabledGroupScope (isAnyTMPro))
+			using (new MaterialDirtyScope (targets))
 			{
 				EditorGUILayout.PropertyField (_spColorMode);
 				EditorGUILayout.PropertyField (_spNoiseTexture);
@@ -138,17 +108,7 @@ namespace Coffee.UIExtensions.Editors
 				}
 			}
 
-			var c = target as UIDissolve;
-			c.ShowTMProWarning (_shader, _mobileShader, _spriteShader, mat => {
-				if(mat.shader == _spriteShader)
-				{
-					mat.shaderKeywords = c.material.shaderKeywords;
-					mat.SetTexture ("_NoiseTex", c.material.GetTexture ("_NoiseTex"));
-				}
-			});
 			ShowCanvasChannelsWarning ();
-
-			ShowMaterialEditors (c.materials, 1, c.materials.Length - 1);
 
 			serializedObject.ApplyModifiedProperties();
 

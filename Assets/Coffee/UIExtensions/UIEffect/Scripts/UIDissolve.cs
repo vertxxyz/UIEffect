@@ -1,7 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
+using System.Text;
+using System.Linq;
+using System.IO;
 
 namespace Coffee.UIExtensions
 {
@@ -9,12 +13,11 @@ namespace Coffee.UIExtensions
 	/// Dissolve effect for uGUI.
 	/// </summary>
 	[AddComponentMenu("UI/UIEffect/UIDissolve", 3)]
-	public class UIDissolve : UIEffectBase
+	public class UIDissolve : UIEffectBase, IMaterialModifier
 	{
 		//################################
 		// Constant or Static Members.
 		//################################
-		public const string shaderName = "UI/Hidden/UI-Effect-Dissolve";
 		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
@@ -79,7 +82,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -96,7 +99,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -113,7 +116,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Width, value))
 				{
 					m_Width = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -130,7 +133,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Softness, value))
 				{
 					m_Softness = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -146,7 +149,7 @@ namespace Coffee.UIExtensions
 				if (m_Color != value)
 				{
 					m_Color = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -164,7 +167,7 @@ namespace Coffee.UIExtensions
 					m_NoiseTexture = value;
 					if (graphic)
 					{
-						ModifyMaterial();
+						graphic.SetMaterialDirty();
 					}
 				}
 			}
@@ -205,7 +208,21 @@ namespace Coffee.UIExtensions
 		/// <summary>
 		/// Color effect mode.
 		/// </summary>
-		public ColorMode colorMode { get { return m_ColorMode; } }
+		public ColorMode colorMode
+		{
+			get { return m_ColorMode; }
+			set
+			{
+				if (m_ColorMode != value)
+				{
+					m_ColorMode = value;
+					if (graphic)
+					{
+						graphic.SetMaterialDirty();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Play effect on enable.
@@ -245,46 +262,80 @@ namespace Coffee.UIExtensions
 		/// </summary>
 		public override ParameterTexture ptex { get { return _ptex; } }
 
-		/// <summary>
-		/// Modifies the material.
-		/// </summary>
-		public override void ModifyMaterial()
+		public override Hash128 GetMaterialHash(Material material)
 		{
-			if (isTMPro)
-			{
-				return;
-			}
+			if(!isActiveAndEnabled || !material || !material.shader)
+				return new Hash128();
 
-			ulong hash = (m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0) + ((ulong)1 << 32) + ((ulong)m_ColorMode << 36);
-			if (_materialCache != null && (_materialCache.hash != hash || !isActiveAndEnabled || !m_EffectMaterial))
-			{
-				MaterialCache.Unregister(_materialCache);
-				_materialCache = null;
-			}
+			uint materialId = (uint)material.GetInstanceID();
+			uint shaderId = 0 << 3;
 
-			if (!isActiveAndEnabled || !m_EffectMaterial)
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
 			{
-				material = null;
+				shaderId += 2;
 			}
-			else if (!m_NoiseTexture)
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
 			{
-				material = m_EffectMaterial;
+				shaderId += 0;
 			}
-			else if (_materialCache != null && _materialCache.hash == hash)
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
 			{
-				material = _materialCache.material;
+				shaderId += 1;
 			}
 			else
 			{
-				_materialCache = MaterialCache.Register(hash, m_NoiseTexture, () =>
-					{
-						var mat = new Material(m_EffectMaterial);
-						mat.name += "_" + m_NoiseTexture.name;
-						mat.SetTexture("_NoiseTex", m_NoiseTexture);
-						return mat;
-					});
-				material = _materialCache.material;
+				shaderId += 0;
 			}
+
+
+			uint shaderVariantId = (uint)((int)m_ColorMode << 6);
+			uint resourceId = m_NoiseTexture ? (uint)m_NoiseTexture.GetInstanceID() : 0;
+			return new Hash128(
+					materialId,
+					shaderId + shaderVariantId,
+					resourceId,
+					0
+				);
+		}
+
+		public override void ModifyMaterial(Material material)
+		{
+			Debug.LogFormat(this, $"ModifyMaterial {material}");
+
+			string materialShaderName = material.shader.name;
+			if(materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIDissolve)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Dissolve");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIDissolve)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Dissolve");
+			}
+			
+			SetShaderVariants(material, m_ColorMode);
+
+			if(m_NoiseTexture)
+			{
+				material.SetTexture("_NoiseTex", m_NoiseTexture);
+			}
+			ptex.RegisterMaterial (material);
+		}
+
+		/// <summary>
+		/// Modifies the material.
+		/// </summary>
+		[ContextMenu("ModifyMaterial")]
+		public override void ModifyMaterial()
+		{
 		}
 
 		/// <summary>
@@ -316,33 +367,13 @@ namespace Coffee.UIExtensions
 					Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
 					Packer.ToFloat(x, y, normalizedIndex)
 				);
-//				if(!isTMPro)
-//				{
-//					vertex.uv0 = new Vector2(
-//						Packer.ToFloat(vertex.uv0.x, vertex.uv0.y),
-//						Packer.ToFloat(x, y, normalizedIndex)
-//					);
-//				}
-//				#if UNITY_5_6_OR_NEWER
-//				else
-//				{
-//					vertex.uv2 = new Vector2 (
-//						Packer.ToFloat (x, y, normalizedIndex),
-//						0
-//					);
-//				}
-//				#endif
 
 				vh.SetUIVertex(vertex, i);
 			}
 		}
 
-		protected override void SetDirty()
+		protected override void SetEffectDirty()
 		{
-			foreach(var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
@@ -376,18 +407,12 @@ namespace Coffee.UIExtensions
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-
-			_player.OnEnable((f) =>
-			{
-				effectFactor = m_Reverse ? 1f - f : f;
-			});
+			_player.OnEnable((f) =>effectFactor = m_Reverse ? 1f - f : f);
 		}
 
 		protected override void OnDisable()
 		{
 			base.OnDisable ();
-			MaterialCache.Unregister(_materialCache);
-			_materialCache = null;
 			_player.OnDisable();
 		}
 
@@ -398,12 +423,7 @@ namespace Coffee.UIExtensions
 		/// <returns>The material.</returns>
 		protected override Material GetMaterial()
 		{
-			if (isTMPro)
-			{
-				return null;
-			}
-
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName), m_ColorMode);
+			return null;
 		}
 
 		#pragma warning disable 0612
@@ -419,14 +439,13 @@ namespace Coffee.UIExtensions
 				_player.updateMode = m_UpdateMode;
 			}
 		}
-		#pragma warning restore 0612
+
+#pragma warning restore 0612
 #endif
 
-		//################################
-		// Private Members.
-		//################################
-		MaterialCache _materialCache = null;
-
+        //################################
+        // Private Members.
+        //################################
 		EffectPlayer _player{ get { return m_Player ?? (m_Player = new EffectPlayer()); } }
 	}
 }

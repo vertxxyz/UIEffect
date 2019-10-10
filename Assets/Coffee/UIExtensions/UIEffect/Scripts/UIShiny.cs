@@ -22,7 +22,7 @@ namespace Coffee.UIExtensions
 		//################################
 		// Constant or Static Members.
 		//################################
-		public const string shaderName = "UI/Hidden/UI-Effect-Shiny";
+		//public const string shaderName = "UI/Hidden/UI-Effect-Shiny";
 		static readonly ParameterTexture _ptex = new ParameterTexture(8, 128, "_ParamTex");
 
 
@@ -87,7 +87,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -104,7 +104,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_EffectFactor, value))
 				{
 					m_EffectFactor = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -121,7 +121,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Width, value))
 				{
 					m_Width = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -138,7 +138,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Softness, value))
 				{
 					m_Softness = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -156,7 +156,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Brightness, value))
 				{
 					m_Brightness = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -173,7 +173,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Brightness, value))
 				{
 					m_Brightness = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -191,7 +191,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Gloss, value))
 				{
 					m_Gloss = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -208,7 +208,7 @@ namespace Coffee.UIExtensions
 				if (!Mathf.Approximately(m_Gloss, value))
 				{
 					m_Gloss = value;
-					SetDirty();
+					SetEffectDirty();
 				}
 			}
 		}
@@ -297,15 +297,67 @@ namespace Coffee.UIExtensions
 		}
 
 
+		public override Hash128 GetMaterialHash (Material material)
+		{
+			if (!isActiveAndEnabled || !material || !material.shader)
+				return new Hash128 ();
+
+			uint materialId = (uint)material.GetInstanceID ();
+			uint shaderId = 1 << 3;
+
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				shaderId += 2;
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				shaderId += 0;
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				shaderId += 1;
+			}
+			else
+			{
+				shaderId += 0;
+			}
+
+			return new Hash128 (
+					materialId,
+					shaderId,
+					0,
+					0
+				);
+		}
+
+		public override void ModifyMaterial (Material material)
+		{
+			string materialShaderName = material.shader.name;
+			if (materialShaderName.StartsWith ("TextMeshPro/Mobile/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Mobile/Distance Field (UIShiny)");
+			}
+			else if (materialShaderName.Equals ("TextMeshPro/Sprite", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Shiny");
+			}
+			else if (materialShaderName.StartsWith ("TextMeshPro/", StringComparison.Ordinal))
+			{
+				material.shader = Shader.Find ("TextMeshPro/Distance Field (UIShiny)");
+			}
+			else
+			{
+				material.shader = Shader.Find ("UI/Hidden/UI-Effect-Shiny");
+			}
+
+			ptex.RegisterMaterial (material);
+		}
+
 #if UNITY_EDITOR
 		protected override Material GetMaterial()
 		{
-			if (isTMPro)
-			{
-				return null;
-			}
-
-			return MaterialResolver.GetOrGenerateMaterialVariant(Shader.Find(shaderName));
+			return null;
 		}
 
 		#pragma warning disable 0612
@@ -379,12 +431,8 @@ namespace Coffee.UIExtensions
 			_player.Stop(reset);
 		}
 
-		protected override void SetDirty()
+		protected override void SetEffectDirty()
 		{
-			foreach (var m in materials)
-			{
-				ptex.RegisterMaterial (m);
-			}
 			ptex.SetData(this, 0, m_EffectFactor);	// param1.x : location
 			ptex.SetData(this, 1, m_Width);		// param1.y : width
 			ptex.SetData(this, 2, m_Softness);	// param1.z : softness
